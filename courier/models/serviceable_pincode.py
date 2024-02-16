@@ -8,7 +8,7 @@ class ServiceablePincode(TimeStampedModel):
     pincode = models.CharField(max_length=8)
     city = models.CharField(max_length=35, null=True, blank=True)
     state = models.CharField(max_length=35, null=True, blank=True)
-    branch_code = models.CharField(max_length=35, null=True, blank=True),
+    branch_code = models.CharField(max_length=35, null=True, blank=True)
     is_cod = models.BooleanField(default=True)
     status = models.BooleanField(default=True)
     active = models.BooleanField(default=True)
@@ -19,3 +19,6 @@ class ServiceablePincode(TimeStampedModel):
         db_table = "serviceable_pincode"
         verbose_name = "Serviceable Pincode"
         verbose_name_plural = "Serviceable Pincodes"
+
+    def __str__(self) -> str:
+        return f"{self.courier_partner} -- {self.pincode}"
