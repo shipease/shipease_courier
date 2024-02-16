@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'courier.apps.CourierConfig',
+    'master_app.apps.MasterAppConfig'
 ]
 
 MIDDLEWARE = [
@@ -74,10 +81,32 @@ WSGI_APPLICATION = 'shipease_courier.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('COURIER_DB_NAME'),
+        'USER': os.getenv('COURIER_DB_USER'),
+        'PASSWORD': os.getenv('COURIER_DB_PASSWORD'),
+        'HOST': os.getenv('COURIER_DB_HOST'),
+        'PORT': os.getenv('COURIER_DB_PORT'),
+    },
+
+      'user_db': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('CORE_DB_NAME'),
+        'USER': os.getenv('CORE_DB_USER'),
+        'PASSWORD': os.getenv('CORE_DB_PASSWORD'),
+        'HOST': os.getenv('CORE_DB_HOST'),
+        'PORT': os.getenv('CORE_DB_PORT'),
+    },
+
+    'order_db': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('ORDER_DB_NAME'),
+        'USER': os.getenv('ORDER_DB_USER'),
+        'PASSWORD': os.getenv('ORDER_DB_PASSWORD'),
+        'HOST': os.getenv('ORDER_DB_HOST'),
+        'PORT':os.getenv('ORDER_DB_PORT'),
+    },
 }
 
 
@@ -105,7 +134,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
