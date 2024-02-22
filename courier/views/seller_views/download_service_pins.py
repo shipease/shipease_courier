@@ -11,9 +11,13 @@ class ServiceablePinDownloadApiView(APIView):
         This api will return list of serviceable pin codes list for the given partner_id in query params. \n
 
         query_params: \n
-            1. partner_id=1
+            1. partner_ids=1,2
         """
+        response = []
+        for p_id in request.query_params.get('partner_ids'):
+            partner_name = ServiceablePincode.partner_name_by_id(p_id)
+            pins_list = ServiceablePincode.service_pin_list(partner_id=p_id)
+            result = {"partner_name":partner_name, "pin_list":pins_list}
+            response.append(result)
 
-        pins_list = ServiceablePincode.service_pin_list(partner_id=request.query_params.get('partner_id'))
-
-        return Response({'pins':pins_list}, status=HTTP_200_OK)
+        return Response(response, status=HTTP_200_OK)

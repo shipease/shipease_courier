@@ -16,6 +16,12 @@ class ServiceablePincode(TimeStampedModel):
     cluster_code = models.CharField(max_length=15, null=True, blank=True)
 
     @staticmethod
+    def partner_name_by_id(partner_id):
+        """This function will retrun the partner name for a partner id"""
+        return ServiceablePincode.objects.filter(partner_id=partner_id).first().courier_partner
+
+
+    @staticmethod
     def service_pin_list(partner_id):
         """This function will return the list of service pin code"""
         return ServiceablePincode.objects.values_list('pincode', flat=True).filter(partner_id=partner_id)
