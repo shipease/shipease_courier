@@ -33,3 +33,25 @@ class ServiceablePincode(TimeStampedModel):
 
     def __str__(self) -> str:
         return f"{self.courier_partner} -- {self.pincode}"
+    
+
+
+class ServiceablePincodeFM(TimeStampedModel):
+    partner_id = models.BigIntegerField(db_index=True)
+    courier_partner = models.CharField(max_length=55)
+    pincode = models.CharField(max_length=8)
+    city = models.CharField(max_length=35, null=True, blank=True)
+    state  = models.CharField(max_length=35, null=True, blank=True)
+    origin_code = models.CharField(max_length=6, null=True, blank=True)
+    branch_code = models.CharField(max_length=35, null=True, blank=True)
+    status = models.BooleanField(default=True)
+
+
+    class Meta:
+        db_table="serviceable_pincode_fm"
+        verbose_name = "Serviceable Pincode FM"
+        verbose_name_plural = "Serviceable Pincodes FM"
+
+    def __str__(self) -> str:
+        return f"{self.courier_partner} -- {self.pincode}"
+    
