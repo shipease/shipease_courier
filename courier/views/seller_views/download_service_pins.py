@@ -3,6 +3,7 @@ from rest_framework.status import HTTP_200_OK
 from rest_framework.response import Response
 from courier.models import ServiceablePincode
 from courier.utils.handlers.serviceability_check import ServiceabilityCheckHandler
+from master_app.utils.xlsx_handler import XlsxHander
 
 
 class ServiceablePinDownloadApiView(APIView):
@@ -15,12 +16,36 @@ class ServiceablePinDownloadApiView(APIView):
             1. partner_ids=1,2
         """
         response = []
+
         partsner_ids = request.query_params.get('partner_ids').split(',')
-        for p_id in partsner_ids:
+
+        valid_partners = []
+        for i in partsner_ids:
+            try:
+                if ServiceablePincode.objects.filter(partner_id=i).exists():
+                    valid_partners.append(i)
+            except:
+                pass
+
+        for p_id in valid_partners:
             partner_name = ServiceablePincode.partner_name_by_id(p_id)
             pins_list = ServiceablePincode.service_pin_list(partner_id=p_id)
             result = {"partner_name": partner_name, "pin_list": pins_list}
             response.append(result)
+
+        workbook, worksheet, output = XlsxHander.get_workbook()
+
+        data_list = []
+        for col_index, partner_pin_list in enumerate(response):
+
+            data = list(partner_pin_list['pin_list'])
+            data.insert(0, partner_pin_list['partner_name'])
+            # worksheet.write_column(0, col_index, data)
+            data_list.append(data)
+        XlsxHander.write_list_into_columns(
+            workbook=workbook, worksheet=worksheet, data_list=data_list)
+
+        return XlsxHander.return_file_response(output=output, file_name="serviceable_pincodes")
 
         return Response(response, status=HTTP_200_OK)
 
