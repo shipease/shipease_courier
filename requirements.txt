@@ -9,6 +9,7 @@ jsonschema==4.21.1
 jsonschema-specifications==2023.12.1
 openpyxl==3.1.2
 psycopg2-binary==2.9.9
+PyJWT==2.8.0
 python-dotenv==1.0.1
 pytz==2024.1
 PyYAML==6.0.1
@@ -17,3 +18,4 @@ rpds-py==0.18.0
 sqlparse==0.4.4
 typing_extensions==4.9.0
 uritemplate==4.1.1
+XlsxWriter==3.2.0
