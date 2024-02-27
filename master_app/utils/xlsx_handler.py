@@ -15,8 +15,12 @@ class XlsxHander:
 
     @staticmethod
     def write_list_into_columns(worksheet, workbook, data_list,):
+        """
+        This function will write a list data in a column in xlsx file.
+        params:
+            data_list should be list of list
+        """
         for col_index, partner_pin_list in enumerate(data_list):
-
             # data = list(partner_pin_list['pin_list'])
             # data.insert(0, partner_pin_list['partner_name'])
             worksheet.write_column(0, col_index, partner_pin_list)

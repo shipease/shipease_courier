@@ -4,9 +4,10 @@ from rest_framework.response import Response
 from courier.models import ServiceablePincode
 from courier.utils.handlers.serviceability_check import ServiceabilityCheckHandler
 from master_app.utils.xlsx_handler import XlsxHander
-
+from rest_framework.permissions import IsAuthenticated
 
 class ServiceablePinDownloadApiView(APIView):
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
         """
@@ -47,11 +48,16 @@ class ServiceablePinDownloadApiView(APIView):
 
         return XlsxHander.return_file_response(output=output, file_name="serviceable_pincodes")
 
-        return Response(response, status=HTTP_200_OK)
-
-
 class CheckServiceabilityApiView(APIView):
+
+    permission_classes = (IsAuthenticated,)
     def get(self, request, *args, **kwargs):
+        """
+        This api will return the pickup and delivery serviceability for particular pincode. \n
+        query_params: \n
+            pincode_type=LM/FM
+            pincode=122001
+        """
 
         pincode_type = request.query_params['pincode_type']
         pincode = request.query_params['pincode']
@@ -68,7 +74,16 @@ class CheckServiceabilityApiView(APIView):
 
 
 class CheckPairServiceabilityApiView(APIView):
+    permission_classes = (IsAuthenticated,)
+
     def get(self, request, *args, **kwargs):
+        """
+        This api will return list of serviceable partner for the given pickup and delivery pincode. \n
+        query_params: \n
+            pickup_pincode=122001
+            delivery_pincode=122002
+
+        """
 
         pickup_pincode = request.query_params.get('pickup_pincode')
         delivery_pincode = request.query_params.get('delivery_pincode')
@@ -76,3 +91,17 @@ class CheckPairServiceabilityApiView(APIView):
         result = ServiceabilityCheckHandler(pin_code=None).check_pair_serviceability(
             pickup_pincode=pickup_pincode, delivery_pincode=delivery_pincode)
         return Response(result, status=200)
+    
+
+class ShipeaseServiceabilityPinCodeDownload(APIView):
+    permission_classes = (IsAuthenticated,)
+    def get(self, request, *args, **kwargs):
+        """
+        This api will download the list of all serviceable pincodes by Shipease.
+        """
+        serviceable_pincodes = ServiceablePincode.objects.values_list('pincode', flat=True).filter(active=True).distinct('pincode')
+        workbook, worksheet, output = XlsxHander.get_workbook()
+        XlsxHander.write_list_into_columns(
+            workbook=workbook, worksheet=worksheet, data_list=[list(serviceable_pincodes)])
+        return XlsxHander.return_file_response(output=output, file_name="shipease_serviceable_pincodes")
+        return Response({'details':serviceable_pincodes}, status=HTTP_200_OK)
