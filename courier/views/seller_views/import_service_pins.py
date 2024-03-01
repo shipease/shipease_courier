@@ -38,4 +38,4 @@ class ImportServiceablePincode(APIView):
         serializer.is_valid(raise_exception=True)
         ServiceablePincode.objects.filter(partner_id=partner_data.id).delete()
         serializer.save(partner_id=partner_data.id, courier_partner=partner_data.keyword)
-        return Response({'message': 'Pincode imported successfully'}, status=HTTP_200_OK)
+        return Response({'message': 'Pincode imported successfully done'}, status=HTTP_200_OK)
