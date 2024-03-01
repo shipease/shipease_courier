@@ -4,7 +4,7 @@ from master_app.models import TimeStampedModel
 
 class ServiceablePincode(TimeStampedModel):
     partner_id = models.BigIntegerField(db_index=True)
-    courier_partner = models.CharField(max_length=55)
+    courier_partner = models.CharField(max_length=55,db_index=True)
     pincode = models.CharField(max_length=8)
     city = models.CharField(max_length=35, null=True, blank=True)
     state = models.CharField(max_length=35, null=True, blank=True)
