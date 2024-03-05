@@ -6,6 +6,7 @@ from courier.utils.handlers.serviceability_check import ServiceabilityCheckHandl
 from master_app.utils.xlsx_handler import XlsxHander
 from rest_framework.permissions import IsAuthenticated
 
+
 class ServiceablePinDownloadApiView(APIView):
     permission_classes = (IsAuthenticated,)
 
