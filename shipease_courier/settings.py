@@ -90,6 +90,7 @@ DATABASES = {
         'PASSWORD': os.getenv('COURIER_DB_PASSWORD'),
         'HOST': os.getenv('COURIER_DB_HOST'),
         'PORT': os.getenv('COURIER_DB_PORT'),
+        'CONN_MAX_AGE': 600,
     },
 
       'user_db': {
@@ -99,6 +100,7 @@ DATABASES = {
         'PASSWORD': os.getenv('CORE_DB_PASSWORD'),
         'HOST': os.getenv('CORE_DB_HOST'),
         'PORT': os.getenv('CORE_DB_PORT'),
+        'CONN_MAX_AGE': 600,
     },
 
     'order_db': {
@@ -108,6 +110,7 @@ DATABASES = {
         'PASSWORD': os.getenv('ORDER_DB_PASSWORD'),
         'HOST': os.getenv('ORDER_DB_HOST'),
         'PORT':os.getenv('ORDER_DB_PORT'),
+        'CONN_MAX_AGE': 600,
     },
 }
 
