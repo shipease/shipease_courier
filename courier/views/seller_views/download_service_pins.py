@@ -4,11 +4,9 @@ from rest_framework.response import Response
 from courier.models import ServiceablePincode
 from courier.utils.handlers.serviceability_check import ServiceabilityCheckHandler
 from master_app.utils.xlsx_handler import XlsxHander
-from rest_framework.permissions import IsAuthenticated
 
 
 class ServiceablePinDownloadApiView(APIView):
-    permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
         """
@@ -51,7 +49,6 @@ class ServiceablePinDownloadApiView(APIView):
 
 class CheckServiceabilityApiView(APIView):
 
-    permission_classes = (IsAuthenticated,)
     def get(self, request, *args, **kwargs):
         """
         This api will return the pickup and delivery serviceability for particular pincode. \n
@@ -75,7 +72,6 @@ class CheckServiceabilityApiView(APIView):
 
 
 class CheckPairServiceabilityApiView(APIView):
-    permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
         """
@@ -95,7 +91,6 @@ class CheckPairServiceabilityApiView(APIView):
     
 
 class ShipeaseServiceabilityPinCodeDownload(APIView):
-    permission_classes = (IsAuthenticated,)
     def get(self, request, *args, **kwargs):
         """
         This api will download the list of all serviceable pincodes by Shipease.

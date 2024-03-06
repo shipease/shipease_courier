@@ -6,11 +6,10 @@ from courier.serializer.import_serviceability_serializer import ImportServiceabi
 from courier.utils.handlers.serviceability_check import ServiceabilityCheckHandler
 from master_app.stub_models import Partner
 from master_app.utils.xlsx_handler import XlsxHander
-from rest_framework.permissions import IsAuthenticated
+
 
 
 class ImportServiceablePincode(APIView):
-    # permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
         """
