@@ -20,9 +20,12 @@ class ServiceabilityCheckHandler:
 
         response = []
         for partner_id in partner_ids:
-            partner_obj = Partner.objects.using('user_db').values('id',
-                                                                  'title', 'mps_enabled', 'reverse_enabled', 'weight_initial', 'extra_limit').get(id=partner_id)
-            response.append(partner_obj)
+            try:
+                partner_obj = Partner.objects.using('user_db').values('id',
+                                                                    'title', 'mps_enabled', 'reverse_enabled', 'weight_initial', 'extra_limit').get(id=partner_id)
+                response.append(partner_obj)
+            except:
+                pass
 
         return response
 
