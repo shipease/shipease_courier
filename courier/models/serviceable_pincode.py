@@ -35,7 +35,6 @@ class ServiceablePincode(TimeStampedModel):
         return f"{self.courier_partner} -- {self.pincode}"
     
 
-
 class ServiceablePincodeFM(TimeStampedModel):
     partner_id = models.BigIntegerField(db_index=True)
     courier_partner = models.CharField(max_length=55)
@@ -45,7 +44,6 @@ class ServiceablePincodeFM(TimeStampedModel):
     origin_code = models.CharField(max_length=6, null=True, blank=True)
     branch_code = models.CharField(max_length=35, null=True, blank=True)
     status = models.BooleanField(default=True)
-
 
     class Meta:
         db_table="serviceable_pincode_fm"
