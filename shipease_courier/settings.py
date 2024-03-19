@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'courier.apps.CourierConfig',
     'master_app.apps.MasterAppConfig',
     'drf_spectacular',
@@ -49,6 +50,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -83,24 +85,24 @@ WSGI_APPLICATION = 'shipease_courier.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-        'default': {
+    'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('COURIER_DB_NAME'),
         'USER': os.getenv('COURIER_DB_USER'),
         'PASSWORD': os.getenv('COURIER_DB_PASSWORD'),
         'HOST': os.getenv('COURIER_DB_HOST'),
         'PORT': os.getenv('COURIER_DB_PORT'),
-        'CONN_MAX_AGE': 600,
+        'CONN_MAX_AGE': 100,
     },
 
-      'user_db': {
+    'user_db': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('CORE_DB_NAME'),
         'USER': os.getenv('CORE_DB_USER'),
         'PASSWORD': os.getenv('CORE_DB_PASSWORD'),
         'HOST': os.getenv('CORE_DB_HOST'),
         'PORT': os.getenv('CORE_DB_PORT'),
-        'CONN_MAX_AGE': 600,
+        'CONN_MAX_AGE': 100,
     },
 
     'order_db': {
@@ -110,7 +112,7 @@ DATABASES = {
         'PASSWORD': os.getenv('ORDER_DB_PASSWORD'),
         'HOST': os.getenv('ORDER_DB_HOST'),
         'PORT':os.getenv('ORDER_DB_PORT'),
-        'CONN_MAX_AGE': 600,
+        'CONN_MAX_AGE': 100,
     },
 }
 
@@ -160,4 +162,13 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'EXCEPTION_HANDLER': 'master_app.utils.exception_handler.custom_exception_handler',
 }
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000", "http://35.154.133.143:8080", "http://35.154.133.143:8000", "https://dev.shipease.in", "http://65.2.38.87:8000", "https://dev.shipease.in"
+]
 

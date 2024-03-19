@@ -15,11 +15,14 @@ class ServiceablePinDownloadApiView(APIView):
         query_params: \n
             1. partner_ids=1,2
         """
+
         response = []
 
         partsner_ids = request.query_params.get('partner_ids').split(',')
 
-        valid_partners = []
+
+        #start getting list of valid partners
+        valid_partners = [] 
         for i in partsner_ids:
             try:
                 if ServiceablePincode.objects.filter(partner_id=i).exists():
@@ -27,24 +30,33 @@ class ServiceablePinDownloadApiView(APIView):
             except:
                 pass
 
+        #end getting list of valid partners
+        workbook, worksheet, output = XlsxHander.get_workbook()    
+
         for p_id in valid_partners:
+
             partner_name = ServiceablePincode.partner_name_by_id(p_id)
             pins_list = ServiceablePincode.service_pin_list(partner_id=p_id)
             result = {"partner_name": partner_name, "pin_list": pins_list}
             response.append(result)
 
-        workbook, worksheet, output = XlsxHander.get_workbook()
 
-        data_list = []
+        #response structure
+        # response = [{'partner_name':'ekart', 'pin_list':[1,2,3,4,5] }, {'partner_name':'shadowfx', 'pin_list':[1,2,3,4,5] }]
         for col_index, partner_pin_list in enumerate(response):
+            try:
+                data_list = []
+                data = list(partner_pin_list['pin_list'])
+                data.insert(0, partner_pin_list['partner_name'])
+                data_list.append(data)
 
-            data = list(partner_pin_list['pin_list'])
-            data.insert(0, partner_pin_list['partner_name'])
-            # worksheet.write_column(0, col_index, data)
-            data_list.append(data)
-        XlsxHander.write_list_into_columns(
-            workbook=workbook, worksheet=worksheet, data_list=data_list)
+                new_worksheet = XlsxHander.add_new_worksheet(workbook=workbook, sheet_name=partner_pin_list['partner_name'])
+                XlsxHander.write_list_into_columns(workbook=workbook, worksheet=new_worksheet, data_list=data_list)
 
+            except Exception as e:
+                pass
+        
+        workbook.close()
         return XlsxHander.return_file_response(output=output, file_name="serviceable_pincodes")
 
 class CheckServiceabilityApiView(APIView):
@@ -97,7 +109,9 @@ class ShipeaseServiceabilityPinCodeDownload(APIView):
         """
         serviceable_pincodes = ServiceablePincode.objects.values_list('pincode', flat=True).filter(active=True).distinct('pincode')
         workbook, worksheet, output = XlsxHander.get_workbook()
+
+        data_worksheet = XlsxHander.add_new_worksheet(workbook=workbook, sheet_name="shipease_pin" )
         XlsxHander.write_list_into_columns(
-            workbook=workbook, worksheet=worksheet, data_list=[list(serviceable_pincodes)])
+            workbook=workbook, worksheet=data_worksheet, data_list=[list(serviceable_pincodes)])
+        workbook.close()
         return XlsxHander.return_file_response(output=output, file_name="shipease_serviceable_pincodes")
-        return Response({'details':serviceable_pincodes}, status=HTTP_200_OK)
